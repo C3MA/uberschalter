@@ -125,21 +125,21 @@ class C3MALight{
 		do{
 			$response .= fgets($connection);
 		}while(!strstr($response,"ch>"));
-		print($response);
+/*		print($response);*/
 
 		fwrite($connection, "dmx write ".$offsetGreen." ".$green."\r\r");
 		$response = "";
 		do{
 			$response .= fgets($connection);
 		}while(!strstr($response,"ch>"));
-		print($response);
+/*		print($response);*/
 
 		fwrite($connection, "dmx write ".$offsetBlue." ".$blue."\r\r");
 		$response = "";
 		do{
 			$response .= fgets($connection);
 		}while(!strstr($response,"ch>"));
-		print($response);
+/*		print($response);*/
 
 		$this->closeConnection($connection);
 	}
@@ -148,7 +148,10 @@ class C3MALight{
 
 
 $c3ma = new C3MALight();
-$c3ma->setRGB(0, 0, 0, 255);
+
+for ($i = 0; $i < 6; $i++) {
+	$c3ma->setRGB($i, 0, 255, 0);
+}
 
 
 /*
