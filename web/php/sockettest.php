@@ -108,10 +108,51 @@ class C3MALight{
  * values. 
  */
 
+	/**
+	 * @param number	index of the lamp (starting with zero)
+	 * @param red		0 - 255
+	 * @param green		0 - 255
+	 ~ @param blue		0 - 255
+	 */
+	public function setRGB($number, $red, $green, $blue) {
+		$connection = $this->getConnection(LightType::RGB);
+		$offsetRed = ($number * 3) + 1;
+		$offsetGreen = ($number * 3) + 2;
+		$offsetBlue = ($number * 3) + 3;
+	
+		fwrite($connection, "dmx write ".$offsetRed." ".$red."\r\r");
+		$response = "";
+		do{
+			$response .= fgets($connection);
+		}while(!strstr($response,"ch>"));
+		print($response);
+
+		fwrite($connection, "dmx write ".$offsetGreen." ".$green."\r\r");
+		$response = "";
+		do{
+			$response .= fgets($connection);
+		}while(!strstr($response,"ch>"));
+		print($response);
+
+		fwrite($connection, "dmx write ".$offsetBlue." ".$blue."\r\r");
+		$response = "";
+		do{
+			$response .= fgets($connection);
+		}while(!strstr($response,"ch>"));
+		print($response);
+
+		$this->closeConnection($connection);
+	}
+	
 }
 
+
+$c3ma = new C3MALight();
+$c3ma->setRGB(0, 0, 0, 255);
+
+
+/*
 $c3ma = new C3MALight();
 var_dump($c3ma->getBinary(1));
-
-
-$c3ma->setBinary(1, Status::ENABLED);
+$c3ma->setBinary(4, Status::ENABLED);
+*/
