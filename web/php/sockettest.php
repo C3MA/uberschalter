@@ -112,7 +112,7 @@ class C3MALight{
 	 * @param number	index of the lamp (starting with zero)
 	 * @param red		0 - 255
 	 * @param green		0 - 255
-	 ~ @param blue		0 - 255
+	 * @param blue		0 - 255
 	 */
 	public function setRGB($number, $red, $green, $blue) {
 		$connection = $this->getConnection(LightType::RGB);
@@ -144,16 +144,56 @@ class C3MALight{
 		$this->closeConnection($connection);
 	}
 	
+	/**
+	 * @param number	index of the lamp (starting with zero)
+	 */
+	public function getRGB($number) {
+		$connection = $this->getConnection(LightType::RGB);
+
+                fwrite($connection, "dmx show\r\r");
+                $response = "";
+                do {
+                        $response .= fgets($connection);
+                } while(!strstr($response,"ch>"));
+/*		print($response); */
+		
+		/* extract the dmx buffer */
+		preg_match('/[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 32);
+		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {
+			print("too tiny");
+			return null;
+		}
+
+		/* extract the dmx buffer */
+		$completeDMX = $matches[0][0];
+
+		preg_match('/[0-9A-F]{6}/', $completeDMX, $lampGroups, PREG_OFFSET_CAPTURE, $number * 6);
+		if ( intval( count($lampGroups, COUNT_RECURSIVE) ) <= 0) {
+			print("too tiny");
+			return null;
+		}
+
+		$lampstatus = $lampGroups[0][0];
+		/* Send the output to the user */
+		return "{\n".
+			"red : ".hexdec(substr($lampstatus, 0, 2)).",\n".
+			"green : ".hexdec(substr($lampstatus, 2, 2)).",\n".
+			"blue : ".hexdec(substr($lampstatus, 4, 2))."\n".
+			"}\n";
+
+		$this->closeConnection($connection);
+	}
 }
 
 
 $c3ma = new C3MALight();
-
+var_dump($c3ma->getRGB(1));
 for ($i = 0; $i < 6; $i++) {
-	$c3ma->setRGB($i, 0, 255, 0);
+	$c3ma->setRGB($i, 0, 0, 255);
 }
 
 
+var_dump($c3ma->getBinary(1));
 /*
 $c3ma = new C3MALight();
 var_dump($c3ma->getBinary(1));
