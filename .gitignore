@@ -3,3 +3,4 @@ lighttpd.conf
 *.cgi
 *.swp
 .DS_Store
+*~
