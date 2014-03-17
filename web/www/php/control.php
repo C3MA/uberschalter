@@ -38,9 +38,9 @@ class C3MALight{
 	 * @param $type LightType object 
 	 * @return Socket or throw exception
 	 */
-	private function getConnection($type) {
+	public function getConnection($type) {
 		$section = $this->configuration[$type];
-		$fp = fsockopen($section["host"], $section["port"], $errno, $errstr, 3);
+		$fp = fsockopen($section["host"], $section["port"], $errno, $errstr, 1);
 		if(!$fp){
 			throw new Exception($errno." : ".$errstr);
 		}else{
@@ -54,7 +54,7 @@ class C3MALight{
 	 * 
 	 * @param $fp Socket
 	 */
-	private function closeConnection($fp) {
+	public function closeConnection($fp) {
 		fclose($fp);
 	}
 
@@ -108,14 +108,18 @@ class C3MALight{
  * values. 
  */
 
+	public function setRGB($number, $red, $green, $blue) {
+		$connection = $this->getConnection(LightType::RGB);
+		$this->setRGBpersistent($connection, $number, $red, $green, $blue);
+		$this->closeConnection($connection);
+	}
 	/**
 	 * @param number	index of the lamp (starting with zero)
 	 * @param red		0 - 255
 	 * @param green		0 - 255
 	 * @param blue		0 - 255
 	 */
-	public function setRGB($number, $red, $green, $blue) {
-		$connection = $this->getConnection(LightType::RGB);
+	public function setRGBpersistent($connection, $number, $red, $green, $blue) {
 		$offsetRed = ($number * 3) + 1;
 		$offsetGreen = ($number * 3) + 2;
 		$offsetBlue = ($number * 3) + 3;
@@ -141,7 +145,6 @@ class C3MALight{
 		}while(!strstr($response,"ch>"));
 /*		print($response);*/
 
-		$this->closeConnection($connection);
 	}
 	
 	/**
@@ -155,7 +158,7 @@ class C3MALight{
                 do {
                         $response .= fgets($connection);
                 } while(!strstr($response,"ch>"));
-/*		print($response); */
+		print($response); flush(); ob_flush(); 
 		
 		/* extract the dmx buffer */
 		preg_match('/[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 32);
@@ -188,12 +191,19 @@ class C3MALight{
 
 $c3ma = new C3MALight();
 var_dump($c3ma->getRGB(1));
+print( "Got state for the first time" ); flush(); ob_flush(); 
+$connection = $c3ma->getConnection(LightType::RGB);
 for ($i = 0; $i < 6; $i++) {
-	$c3ma->setRGB($i, 0, 0, 255);
+	$c3ma->setRGBpersistent($connection,$i, 0, 0, 0);
 }
+$c3ma->closeConnection($connection);
+print("Updated state"); flush(); ob_flush(); 
+var_dump($c3ma->getRGB(1));
+
+print( "Got state for the second time" ); flush(); ob_flush(); 
+//var_dump($c3ma->getBinary(1));
 
 
-var_dump($c3ma->getBinary(1));
 /*
 $c3ma = new C3MALight();
 var_dump($c3ma->getBinary(1));
