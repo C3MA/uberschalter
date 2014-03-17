@@ -16,7 +16,6 @@ $(document).ready(function() {
     $('input:checkbox').change(function(){
     
         $.post( "cgi-bin/lamp.cgi", { lamp : this.name, value: (this.checked) ? 'h':'l' }, function( data ) {
-                var obj = jQuery.parseJSON( data );
 		getState();
         });
     }); 
@@ -25,12 +24,15 @@ $(document).ready(function() {
    
 
 function getState() {
-	 $.get("cgi-bin/lamp.cgi", function(data){
-                var obj = jQuery.parseJSON( data );
+	 $.getJSON("cgi-bin/lamp.cgi", function(data){
+	 $.each(data, function( key, val ) { 
+		$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
+	 });
+/*                var obj = jQuery.parseJSON( data );
                 for (var i=1;i<7;i++){
 			$('#'+i).prop('checked',(obj[i] == 'h') ? true : false).trigger('create').checkboxradio('refresh');
                 }
-
+*/
     	});
     
 };
