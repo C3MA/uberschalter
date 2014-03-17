@@ -26,9 +26,16 @@ class C3MALight{
 	 * @var holds the actual configuration after construction
  	 */
 	private $configuration;
+	
+	private $connection;
 
-	public function __construct(){
+	public function __construct($type) {
 		$this->configuration = parse_ini_file(self::$config,TRUE);
+		$this->connection = $this->getConnection($type);
+	}
+	
+	public function __destruct() {
+		$this->closeConnection($this->connection);
 	}
 
 	/**
@@ -70,29 +77,22 @@ class C3MALight{
  * ollpew<n><h|l> | write status <l> (low, off) or <h> (high, on) 
  * 		  | to lamp with id <n>. Response same as ollpera
  */
-	public function getBinaryAll(){
-		$connection = $this->getConnection(LightType::BINARY);
-		fwrite($connection, "ollpera\n");
+	
+	public function getBinaryAll() {
+		fwrite($this->connection, "ollpera\n");
 		$response = "";
 		do{
 			$response .= fgets($connection);
 		}while(!strstr($response,"ACK"));
-		$this->closeConnection($connection);
+		
 		$result = explode(' ',strstr(str_replace(array("\n"), ' ',$response),"states"));
 		return $result[1];
 	}
 
-	public function getBinary($number){
-		$result = $this->getBinaryAll();
-		return $result{$number-1};
-	}
-
 	public function setBinary($number, $status) {
-		$connection = $this->getConnection(LightType::BINARY);
-		fwrite($connection, "ollpew".$number.$status."\n");
-		$this->closeConnection($connection);
+		fwrite($this->connection, "ollpew".$number.$status."\n");
 	}
-
+	
 
 
 /**
@@ -108,56 +108,48 @@ class C3MALight{
  * values. 
  */
 
-	public function setRGB($number, $red, $green, $blue) {
-		$connection = $this->getConnection(LightType::RGB);
-		$this->setRGBpersistent($connection, $number, $red, $green, $blue);
-		$this->closeConnection($connection);
-	}
 	/**
 	 * @param number	index of the lamp (starting with zero)
 	 * @param red		0 - 255
 	 * @param green		0 - 255
 	 * @param blue		0 - 255
 	 */
-	public function setRGBpersistent($connection, $number, $red, $green, $blue) {
+	public function setRGB($number, $red, $green, $blue) {
 		$offsetRed = ($number * 3) + 1;
 		$offsetGreen = ($number * 3) + 2;
 		$offsetBlue = ($number * 3) + 3;
 	
-		fwrite($connection, "dmx write ".$offsetRed." ".$red."\r\r");
+		fwrite($this->connection, "dmx write ".$offsetRed." ".$red."\r\r");
 		$response = "";
 		do{
-			$response .= fgets($connection);
+			$response .= fgets($this->connection);
 		}while(!strstr($response,"ch>"));
 /*		print($response);*/
 
-		fwrite($connection, "dmx write ".$offsetGreen." ".$green."\r\r");
+		fwrite($this->connection, "dmx write ".$offsetGreen." ".$green."\r\r");
 		$response = "";
 		do{
-			$response .= fgets($connection);
+			$response .= fgets($this->connection);
 		}while(!strstr($response,"ch>"));
 /*		print($response);*/
 
-		fwrite($connection, "dmx write ".$offsetBlue." ".$blue."\r\r");
+		fwrite($this->connection, "dmx write ".$offsetBlue." ".$blue."\r\r");
 		$response = "";
 		do{
-			$response .= fgets($connection);
+			$response .= fgets($this->connection);
 		}while(!strstr($response,"ch>"));
 /*		print($response);*/
-
 	}
 	
 	/**
 	 * @param number	index of the lamp (starting with zero)
 	 */
 	public function getRGB($number) {
-		$connection = $this->getConnection(LightType::RGB);
-
-                fwrite($connection, "dmx show\r\r");
-                $response = "";
-                do {
-                        $response .= fgets($connection);
-                } while(!strstr($response,"ch>"));
+		fwrite($this->connection, "dmx show\r\r");
+        $response = "";
+        do {
+        	$response .= fgets($this->connection);
+		} while(!strstr($response,"ch>"));
 		print($response); flush(); ob_flush(); 
 		
 		/* extract the dmx buffer */
@@ -183,20 +175,18 @@ class C3MALight{
 			"green : ".hexdec(substr($lampstatus, 2, 2)).",\n".
 			"blue : ".hexdec(substr($lampstatus, 4, 2))."\n".
 			"}\n";
-
-		$this->closeConnection($connection);
 	}
 }
 
-
-$c3ma = new C3MALight();
+$c3ma = new C3MALight(LightType::RGB);
 var_dump($c3ma->getRGB(1));
-print( "Got state for the first time" ); flush(); ob_flush(); 
-$connection = $c3ma->getConnection(LightType::RGB);
-for ($i = 0; $i < 6; $i++) {
-	$c3ma->setRGBpersistent($connection,$i, 0, 0, 0);
+print( "Got state for the first time" ); flush(); ob_flush();
+
+for ($i = 0; $i < 6; $i++)
+{
+	$c3ma->setRGB($i, 0, 0, 0);
 }
-$c3ma->closeConnection($connection);
+
 print("Updated state"); flush(); ob_flush(); 
 var_dump($c3ma->getRGB(1));
 
