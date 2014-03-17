@@ -82,7 +82,7 @@ class C3MALight{
 		fwrite($this->connection, "ollpera\n");
 		$response = "";
 		do{
-			$response .= fgets($connection);
+			$response .= fgets($this->connection);
 		}while(!strstr($response,"ACK"));
 		
 		$result = explode(' ',strstr(str_replace(array("\n"), ' ',$response),"states"));
@@ -145,17 +145,18 @@ class C3MALight{
 	 * @param number	index of the lamp (starting with zero)
 	 */
 	public function getRGB($number) {
-		fwrite($this->connection, "dmx show\r\r");
+		fwrite($this->connection, "\r\rdmx show\r\r");
         $response = "";
         do {
         	$response .= fgets($this->connection);
-		} while(!strstr($response,"ch>"));
-		print($response); flush(); ob_flush(); 
+		} while($response == NULL || !strstr($response,"ch>"));
+		/*print($response); flush(); ob_flush();*/ 
 		
 		/* extract the dmx buffer */
 		preg_match('/[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 32);
 		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {
-			print("too tiny");
+			print("too tiny\n");
+			print("Got: " . $response . "\n");
 			return null;
 		}
 
@@ -164,7 +165,8 @@ class C3MALight{
 
 		preg_match('/[0-9A-F]{6}/', $completeDMX, $lampGroups, PREG_OFFSET_CAPTURE, $number * 6);
 		if ( intval( count($lampGroups, COUNT_RECURSIVE) ) <= 0) {
-			print("too tiny");
+			print("too tiny part 2\n");
+			print("Got: " . $response . "\n");
 			return null;
 		}
 
@@ -180,17 +182,17 @@ class C3MALight{
 
 $c3ma = new C3MALight(LightType::RGB);
 var_dump($c3ma->getRGB(1));
-print( "Got state for the first time" ); flush(); ob_flush();
+echo( "Got state for the first time\n" ); /*flush(); ob_flush();*/
 
 for ($i = 0; $i < 6; $i++)
 {
 	$c3ma->setRGB($i, 0, 0, 0);
 }
 
-print("Updated state"); flush(); ob_flush(); 
+print("Updated state\n"); /*flush(); ob_flush();*/
 var_dump($c3ma->getRGB(1));
 
-print( "Got state for the second time" ); flush(); ob_flush(); 
+echo( "Got state for the second time\n" ); /*flush(); ob_flush();*/
 //var_dump($c3ma->getBinary(1));
 
 
