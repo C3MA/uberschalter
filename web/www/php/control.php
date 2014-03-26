@@ -88,6 +88,11 @@ class C3MALight{
 		$result = explode(' ',strstr(str_replace(array("\n"), ' ',$response),"states"));
 		return $result[1];
 	}
+	
+	public function getBinary($id){
+		$all = $this->getBinaryAll();
+		return ($all[$id] == 0) ? Status::ENABLED : Status::DISABLED;
+	}
 
 	public function setBinary($number, $status) {
 		fwrite($this->connection, "ollpew".$number.$status."\n");
@@ -178,10 +183,8 @@ class C3MALight{
 
 		$lampstatus = $lampGroups[0][0];
 		/* Send the output to the user */
-		return "{\n".
-			"red : ".hexdec(substr($lampstatus, 0, 2)).",\n".
-			"green : ".hexdec(substr($lampstatus, 2, 2)).",\n".
-			"blue : ".hexdec(substr($lampstatus, 4, 2))."\n".
-			"}\n";
+		return array("red" => hexdec(substr($lampstatus, 0, 2)),
+			"green" => hexdec(substr($lampstatus, 2, 2)),
+			"blue" => hexdec(substr($lampstatus, 4, 2)));
 	}
 }
