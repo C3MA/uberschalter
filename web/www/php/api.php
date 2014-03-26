@@ -1,5 +1,5 @@
 <?php 
-require_once 'control.php';
+require_once 'C3MALight.php';
  
 $types = array( "bin" , "rgb" );
 
