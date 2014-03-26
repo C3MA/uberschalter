@@ -21,7 +21,13 @@ if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"])
 				print $b->get($id);
 				break;
 			case "rgb":
-				
+				$rgb = new C3MAWrapperRGB();
+				if(isset ($_REQUEST["r"])
+					&& isset ($_REQUEST["g"]) 
+					&& isset ($_REQUEST["b"])){
+					$rgb->set($id,$_REQUEST["r"], $_REQUEST["g"], $_REQUEST["b"]);
+				}
+				print $rgb->get($id);
 				break;
 			default:
 				new Exception("Bad request",400);
