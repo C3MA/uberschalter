@@ -15,12 +15,13 @@ $smarty->setCacheDir(__DIR__.'/cache/');
 
 $binary = new C3MALight(LightType::BINARY);
 
-$binary->setBinary(1,(isset($_GET("b1"))) ? Status::ENABLED : Status::DISABLED);
-$binary->setBinary(2,(isset($_GET("b2"))) ? Status::ENABLED : Status::DISABLED);
-$binary->setBinary(3,(isset($_GET("b3"))) ? Status::ENABLED : Status::DISABLED);
-$binary->setBinary(4,(isset($_GET("b4"))) ? Status::ENABLED : Status::DISABLED);
-$binary->setBinary(5,(isset($_GET("b5"))) ? Status::ENABLED : Status::DISABLED);
-$binary->setBinary(6,(isset($_GET("b6"))) ? Status::ENABLED : Status::DISABLED);
+//@FIXME Everthing is broken and makes the C3MA a dark room (if you do not enable the lighttiles
+$binary->setBinary(1,(isset($_GET["b1"])) ? Status::ENABLED : Status::DISABLED);
+$binary->setBinary(2,(isset($_GET["b2"])) ? Status::ENABLED : Status::DISABLED);
+$binary->setBinary(3,(isset($_GET["b3"])) ? Status::ENABLED : Status::DISABLED);
+$binary->setBinary(4,(isset($_GET["b4"])) ? Status::ENABLED : Status::DISABLED);
+$binary->setBinary(5,(isset($_GET["b5"])) ? Status::ENABLED : Status::DISABLED);
+$binary->setBinary(6,(isset($_GET["b6"])) ? Status::ENABLED : Status::DISABLED);
 
 if ($binary->getBinary(1)) $smarty->assign('bin1','checked');
 if ($binary->getBinary(2)) $smarty->assign('bin2','checked');
