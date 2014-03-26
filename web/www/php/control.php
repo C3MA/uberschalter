@@ -158,20 +158,22 @@ class C3MALight{
 		
 		/* extract the dmx buffer */
 		preg_match('/[0-9A-F]{50}[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 0);
-		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {
-			print("PHP| too tiny\n");
-			print("PHP| Got: " . $response . "\n");
-			return null;
+		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {			
+			throw new Exception("DMX buffer response too tiny, Got: " . $response );			
 		}
 
 		/* extract the dmx buffer */
 		$completeDMX = $matches[0][0];
 		
+		
+		if (number > (strlen($completeDMX) / 6) )
+		{
+			throw new Exception("Number must be lower than: ".  (strlen($completeDMX) / 6) );			
+		}
+		
 		preg_match('/[0-9A-F]{6}/', $completeDMX, $lampGroups, PREG_OFFSET_CAPTURE, $number * 6);
 		if ( intval( count($lampGroups, COUNT_RECURSIVE) ) <= 0) {
-			print("PHP| too tiny part 2\n");
-			print("PHP| Got: " . $response . "\n");
-			return null;
+			throw new Exception("DMX buffer response too tiny, Got: " . $response );
 		}
 
 		$lampstatus = $lampGroups[0][0];
@@ -184,6 +186,9 @@ class C3MALight{
 	}
 }
 
+$type = $_GET["type"];
+$id = $_GET["id"];
+
 $c3ma = new C3MALight(LightType::RGB);
 var_dump($c3ma->getRGB(1));
 
@@ -193,12 +198,3 @@ for ($i = 0; $i < 6; $i++)
 }
 
 var_dump($c3ma->getRGB(2));
-
-//var_dump($c3ma->getBinary(1));
-
-
-/*
-$c3ma = new C3MALight();
-var_dump($c3ma->getBinary(1));
-$c3ma->setBinary(4, Status::ENABLED);
-*/
