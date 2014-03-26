@@ -32,7 +32,7 @@
 						</ul>
 					</div>
 					<div id="binary" class="ui-body-d ui-content">
-						<form action="index.php" method="post">
+						<form action="index.php" method="post" name="binaryForm" id="binaryForm" >
 							<label for="b1"> Lampe #1</label> <input type="checkbox"
 								data-role="flipswitch" name="b1" id="b1" {if isset($bin1)}checked="checked"{/if} onchange="this.form.submit()">
 							<label for="b2"> Lampe #2</label> <input type="checkbox"
@@ -48,27 +48,31 @@
 						</form>
 					</div>
 					<div id="rgb">
-						<form action="index.php" method="post">
+						<form action="index.php" method="post" name="rgbForm" id="rgbForm" >
 							<fieldset data-role="controlgroup" data-type="horizontal">
 								<legend>Light Tiles:</legend>
-								<input name="1" id="1" type="checkbox"> <label for="1">1</label>
-								<input name="2" id="2" type="checkbox"> <label for="2">2</label>
-								<input name="3" id="3" type="checkbox"> <label for="3">3</label>
-								<input name="4" id="4" type="checkbox"> <label for="4">4</label>
-								<input name="5" id="5" type="checkbox"> <label for="5">5</label>
-								<input name="6" id="6" type="checkbox"> <label for="6">6</label>
+								<input name="rgb1" id="rgb1" type="checkbox"> <label for="rgb1">1</label>
+								<input name="rgb2" id="rgb2" type="checkbox"> <label for="rgb2">2</label>
+								<input name="rgb3" id="rgb3" type="checkbox"> <label for="rgb3">3</label>
+								<input name="rgb4" id="rgb4" type="checkbox"> <label for="rgb4">4</label>
+								<input name="rgb5" id="rgb5" type="checkbox"> <label for="rgb5">5</label>
+								<input name="rgb6" id="rgb6" type="checkbox"> <label for="rgb6">6</label>
 							</fieldset>
 
-							<label for="red">Red</label> <input name="red" id="red" min="0"
+							<label for="red">Red</label>
+							<input name="red" id="red" min="0"
 								max="255" value="128" data-show-value="true"
-								data-popup-enabled="true" type="range"> <label
-								for="green">Green</label> <input name="green" id="green" min="0"
+								data-popup-enabled="true" type="range" >
+							<label	for="green">Green</label>
+							<input name="green" id="green" min="0"
 								max="255" value="128" data-show-value="true"
-								data-popup-enabled="true" type="range"> <label
-								for="blue">Blue</label> <input name="blue" id="blue" min="0"
+								data-popup-enabled="true" type="range" >
+							<label for="blue">Blue</label>
+							<input name="blue" id="blue" min="0"
 								max="255" value="128" data-show-value="true"
-								data-popup-enabled="true" type="range"> <input
-								type="button" name="submit" id="submit" value="Submit">
+								data-popup-enabled="true" type="range" >
+
+							<input	type="submit" name="submit" id="submit" value="Submit" >
 
 						</form>
 					</div>
