@@ -1,10 +1,12 @@
 <?php 
 require_once 'C3MALight.php';
+require_once 'C3MAWrapper.php';
  
 $types = array( "bin" , "rgb" );
 
 if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"]) 
-	&& is_int($_REQUEST["id"]) && in_array($_REQUEST["type"], $types) )
+	&& is_numeric($_REQUEST["id"]) && in_array($_REQUEST["type"], $types) )
+
 {
 	$type = $_REQUEST["type"];
 	$id = $_REQUEST["id"];
@@ -22,7 +24,7 @@ if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"])
 				
 				break;
 			default:
-				new Exception("Bad request",400)
+				new Exception("Bad request",400);
 		}
 	}catch(Exception $e){
 		print json_encode(array( "error" => $e->getCode(), "message" => $e->getMessage()));
