@@ -15,7 +15,7 @@ class C3MAWrapperRGB{
 	
 	public function get($id) {
 		$this->isValidID($id);
-		return json_encode(array( $id => $this->lightController->getRGB($id)));
+		return json_encode(array( ($id + 1) => $this->lightController->getRGB($id)));
 	}
 	
 	public function set($id,$red, $green, $blue) {
