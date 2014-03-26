@@ -51,12 +51,12 @@
 						<form action="index.php" method="get" name="rgbForm" id="rgbForm" >
 							<fieldset data-role="controlgroup" data-type="horizontal">
 								<legend>Light Tiles:</legend>
-								<input name="rgb1" id="rgb1" type="checkbox"> <label for="rgb1">1</label>
-								<input name="rgb2" id="rgb2" type="checkbox"> <label for="rgb2">2</label>
-								<input name="rgb3" id="rgb3" type="checkbox"> <label for="rgb3">3</label>
-								<input name="rgb4" id="rgb4" type="checkbox"> <label for="rgb4">4</label>
-								<input name="rgb5" id="rgb5" type="checkbox"> <label for="rgb5">5</label>
-								<input name="rgb6" id="rgb6" type="checkbox"> <label for="rgb6">6</label>
+								<input name="rgb1" id="rgb1" type="checkbox" {if isset($smarty.get.rgb1)}selected="selected"{/if}> <label for="rgb1">1</label>
+								<input name="rgb2" id="rgb2" type="checkbox" {if isset($smarty.get.rgb2)}selected="selected"{/if}> <label for="rgb2">2</label>
+								<input name="rgb3" id="rgb3" type="checkbox" {if isset($smarty.get.rgb3)}selected="selected"{/if}> <label for="rgb3">3</label>
+								<input name="rgb4" id="rgb4" type="checkbox" {if isset($smarty.get.rgb4)}selected="selected"{/if}> <label for="rgb4">4</label>
+								<input name="rgb5" id="rgb5" type="checkbox" {if isset($smarty.get.rgb5)}selected="selected"{/if}> <label for="rgb5">5</label>
+								<input name="rgb6" id="rgb6" type="checkbox" {if isset($smarty.get.rgb6)}selected="selected"{/if}> <label for="rgb6">6</label>
 							</fieldset>
 
 							<label for="red">Red</label>
