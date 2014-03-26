@@ -146,6 +146,10 @@ class C3MALight{
 	 */
 	public function getRGB($number) {
 		fwrite($this->connection, "\r\rdmx show\r\r");
+		$response = "";
+		do {
+			$response .= fgets($this->connection);
+		} while($response == NULL || !strstr($response,"show"));
         $response = "";
         do {
         	$response .= fgets($this->connection);
@@ -155,8 +159,8 @@ class C3MALight{
 		/* extract the dmx buffer */
 		preg_match('/[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 32);
 		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {
-			print("too tiny\n");
-			print("Got: " . $response . "\n");
+			print("PHP| too tiny\n");
+			print("PHP| Got: " . $response . "\n");
 			return null;
 		}
 
@@ -165,8 +169,8 @@ class C3MALight{
 
 		preg_match('/[0-9A-F]{6}/', $completeDMX, $lampGroups, PREG_OFFSET_CAPTURE, $number * 6);
 		if ( intval( count($lampGroups, COUNT_RECURSIVE) ) <= 0) {
-			print("too tiny part 2\n");
-			print("Got: " . $response . "\n");
+			print("PHP| too tiny part 2\n");
+			print("PHP| Got: " . $response . "\n");
 			return null;
 		}
 
@@ -182,17 +186,14 @@ class C3MALight{
 
 $c3ma = new C3MALight(LightType::RGB);
 var_dump($c3ma->getRGB(1));
-echo( "Got state for the first time\n" ); /*flush(); ob_flush();*/
 
 for ($i = 0; $i < 6; $i++)
 {
-	$c3ma->setRGB($i, 0, 0, 0);
+	$c3ma->setRGB($i, 0, 0, 255);
 }
 
-print("Updated state\n"); /*flush(); ob_flush();*/
-var_dump($c3ma->getRGB(1));
+var_dump($c3ma->getRGB(2));
 
-echo( "Got state for the second time\n" ); /*flush(); ob_flush();*/
 //var_dump($c3ma->getBinary(1));
 
 
