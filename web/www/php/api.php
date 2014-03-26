@@ -22,6 +22,7 @@ if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"])
 				break;
 			case "rgb":
 				$rgb = new C3MAWrapperRGB();
+				$id = $id - 1; // use for RGB and binary the same indexing
 				if(isset ($_REQUEST["r"])
 					&& isset ($_REQUEST["g"]) 
 					&& isset ($_REQUEST["b"])){
