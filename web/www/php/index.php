@@ -14,4 +14,3 @@ $smarty->setCacheDir(__DIR__.'/cache/');
 
 $smarty->display('index.tpl');
 
-var_dump($_REQUEST);

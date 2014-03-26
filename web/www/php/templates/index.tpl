@@ -32,7 +32,7 @@
 						</ul>
 					</div>
 					<div id="binary" class="ui-body-d ui-content">
-						<form action="index.php" method="post" name="binaryForm" id="binaryForm" >
+						<form action="index.php" method="get" name="binaryForm" id="binaryForm" >
 							<label for="b1"> Lampe #1</label> <input type="checkbox"
 								data-role="flipswitch" name="b1" id="b1" {if isset($bin1)}checked="checked"{/if} onchange="this.form.submit()">
 							<label for="b2"> Lampe #2</label> <input type="checkbox"
@@ -48,7 +48,7 @@
 						</form>
 					</div>
 					<div id="rgb">
-						<form action="index.php" method="post" name="rgbForm" id="rgbForm" >
+						<form action="index.php" method="get" name="rgbForm" id="rgbForm" >
 							<fieldset data-role="controlgroup" data-type="horizontal">
 								<legend>Light Tiles:</legend>
 								<input name="rgb1" id="rgb1" type="checkbox"> <label for="rgb1">1</label>
