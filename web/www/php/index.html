@@ -1,73 +1,85 @@
-<!DOCTYPE html> 
-<html> 
-        <head> 
-        <title>Lamp Pi</title> 
-        <meta name="viewport" content="width=device-width, initial-scale=1"> 
-        <link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
-        <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lamp Pi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style/jquery.mobile-1.4.0.min.css" />
+<script type="text/javascript" src="style/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="style/jquery.mobile-1.4.0.min.js"></script>
 </head>
-<body> 
+<body>
 
-<script type="text/javascript">
+	<script type="text/javascript">
+		
+	</script>
 
-$(document).ready(function() {
+	<div data-role="page">
 
-    $('input:checkbox').change(function(){
-    
-        $.get( "php/api.php", { type : "bin" , id : this.name, v: (this.checked) ? 0 :1 }, function( data ) {
-	 $.each(data, function( key, val ) { 
-		$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
-	 });
-        });
-    }); 
-    
-});    
-   
+		<div data-role="header">
+			<h1>Lamp control (Ueberschalter)</h1>
+		</div>
+		<!-- /header -->
 
-function getState() {
-	for (var i=1;i<6;i++){
-		$.get( "php/api.php", { type : "bin" , id : i, function( data ) {
-		 $.each(data, function( key, val ) { 
-		   $('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
-		 });
-		});
-	}
-};
+		<div data-role="content">
+			<div class="content-primary">
 
-getState();
+				<div data-role="tabs" id="tabs">
+					<div data-role="navbar">
+						<ul>
+							<li><a href="#binary" data-ajax="false">Binary</a></li>
+							<li><a href="#rgb" data-ajax="false">RGB</a></li>
+						</ul>
+					</div>
+					<div id="binary" class="ui-body-d ui-content">
+						<form action="index.php" method="post">
+							<label for="b1"> Lampe #1</label> <input type="checkbox"
+								data-role="flipswitch" name="b1" id="b1" checked="checked">
+							<label for="b2"> Lampe #2</label> <input type="checkbox"
+								data-role="flipswitch" name="b2" id="b2" checked="checked">
+							<label for="b3"> Lampe #3</label> <input type="checkbox"
+								data-role="flipswitch" name="b3" id="b3" checked="checked">
+							<label for="b4"> Lampe #4</label> <input type="checkbox"
+								data-role="flipswitch" name="b4" id="b4" checked="checked">
+							<label for="b5"> Lampe #5</label> <input type="checkbox"
+								data-role="flipswitch" name="b5" id="b5" checked="checked">
+							<label for="b6"> Lampe #6</label> <input type="checkbox"
+								data-role="flipswitch" name="b6" id="b6" checked="checked">
+						</form>
+					</div>
+					<div id="rgb">
+						<form action="index.php" method="post">
+							<fieldset data-role="controlgroup" data-type="horizontal">
+								<legend>Light Tiles:</legend>
+								<input name="1" id="1" type="checkbox"> <label for="1">1</label>
+								<input name="2" id="2" type="checkbox"> <label for="2">2</label>
+								<input name="3" id="3" type="checkbox"> <label for="3">3</label>
+								<input name="4" id="4" type="checkbox"> <label for="4">4</label>
+								<input name="5" id="5" type="checkbox"> <label for="5">5</label>
+								<input name="6" id="6" type="checkbox"> <label for="6">6</label>
+							</fieldset>
 
-window.setInterval(getState, 2000);
+							<label for="red">Red</label> <input name="red" id="red" min="0"
+								max="255" value="50" data-show-value="true"
+								data-popup-enabled="true" type="range"> <label
+								for="green">Green</label> <input name="green" id="green" min="0"
+								max="255" value="50" data-show-value="true"
+								data-popup-enabled="true" type="range"> <label
+								for="blue">Blue</label> <input name="blue" id="blue" min="0"
+								max="255" value="50" data-show-value="true"
+								data-popup-enabled="true" type="range"> <input
+								type="button" name="submit" id="submit" value="Submit">
 
-</script>
+						</form>
+					</div>
+				</div>
 
-<div data-role="page">
 
-        <div data-role="header">
-                <h1>Lamp control (Ueberschalter)</h1>
-        </div><!-- /header -->
 
-        <div data-role="content">
-                <div class="content-primary">
+			</div>
+		</div>
 
-                <form action="#" method="get">
-                        <label for="1"> Lampe #1</label>
-                        <input type="checkbox" data-role="flipswitch" name="1" id="1" checked="checked">
-                        <label for="2"> Lampe #2</label>
-                        <input type="checkbox" data-role="flipswitch" name="2" id="2" checked="checked">
-                        <label for="3"> Lampe #3</label>
-                        <input type="checkbox" data-role="flipswitch" name="3" id="3" checked="checked">
-                        <label for="4"> Lampe #4</label>
-                        <input type="checkbox" data-role="flipswitch" name="4" id="4" checked="checked">
-                        <label for="5"> Lampe #5</label>
-                        <input type="checkbox" data-role="flipswitch" name="5" id="5" checked="checked">
-                        <label for="6"> Lampe #6</label>
-                        <input type="checkbox" data-role="flipswitch" name="6" id="6" checked="checked">
-                </form>
-                </div>
-        </div>
-
-</div><!-- /page -->
+	</div>
+	<!-- /page -->
 
 </body>
 </html>
