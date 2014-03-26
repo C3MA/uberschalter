@@ -9,16 +9,23 @@ if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"])
 	$type = $_REQUEST["type"];
 	$id = $_REQUEST["id"];
 	
-	switch($type){
-		case "bin":
-			
-			break;
-		case "rgb":
-			
-			break;
-		default:
-			// we should never reach this, else $_REQUEST is seriously broken
-			break;
+	try{
+		switch($type){
+			case "bin":
+				$b = new C3MAWrapperBinary();
+				if(isset ($_REQUEST["v"]) ){
+					$b->set($id,$_REQUEST["v"]);
+				}
+				print $b->get($id);
+				break;
+			case "rgb":
+				
+				break;
+			default:
+				new Exception("Bad request",400)
+		}
+	}catch(Exception $e){
+		print json_encode(array( "error" => $e->getCode(), "message" => $e->getMessage()));
 	}
 	
 }else{

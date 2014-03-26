@@ -91,7 +91,7 @@ class C3MALight{
 	
 	public function getBinary($id){
 		$all = $this->getBinaryAll();
-		return ($all[$id] == 0) ? Status::ENABLED : Status::DISABLED;
+		return ($all[$id - 1] == 0) ? Status::ENABLED : Status::DISABLED;
 	}
 
 	public function setBinary($number, $status) {
