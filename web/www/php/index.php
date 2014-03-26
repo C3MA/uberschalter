@@ -1,10 +1,16 @@
 <?php 
 require_once 'control.php';
  
-$type = $_REQUEST["type"];
-$id = $_REQUEST["id"];
+$types = array( "bin" , "rgb" );
 
-if (isset($type) && isset($id))
+if (isset ($_REQUEST["type"]) && isset($_REQUEST["id"]) 
+	&& is_int($_REQUEST["id"]) && in_array($_REQUEST["type"], $types) )
+{
+	$type = $_REQUEST["type"];
+	$id = $_REQUEST["id"];
+}
+
+if (! isset($type) && ! isset($id))
 {
 	print "You MUST set 'type' and id'";
 	return;
