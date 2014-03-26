@@ -12,3 +12,6 @@ $smarty->setCompileDir(__DIR__.'/templates_c/');
 $smarty->setConfigDir(__DIR__.'/config/');
 $smarty->setCacheDir(__DIR__.'/cache/');
 
+$smarty->display('index.tpl');
+
+var_dump($_REQUEST);
