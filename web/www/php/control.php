@@ -154,10 +154,10 @@ class C3MALight{
         do {
         	$response .= fgets($this->connection);
 		} while($response == NULL || !strstr($response,"ch>"));
-		/*print($response); flush(); ob_flush();*/ 
+		/*print($response); */
 		
 		/* extract the dmx buffer */
-		preg_match('/[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 32);
+		preg_match('/[0-9A-F]{50}[0-9A-F]+/', $response, $matches, PREG_OFFSET_CAPTURE, 0);
 		if ( intval( count($matches, COUNT_RECURSIVE) ) <= 0) {
 			print("PHP| too tiny\n");
 			print("PHP| Got: " . $response . "\n");
@@ -166,7 +166,7 @@ class C3MALight{
 
 		/* extract the dmx buffer */
 		$completeDMX = $matches[0][0];
-
+		
 		preg_match('/[0-9A-F]{6}/', $completeDMX, $lampGroups, PREG_OFFSET_CAPTURE, $number * 6);
 		if ( intval( count($lampGroups, COUNT_RECURSIVE) ) <= 0) {
 			print("PHP| too tiny part 2\n");
