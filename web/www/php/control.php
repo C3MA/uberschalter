@@ -185,16 +185,3 @@ class C3MALight{
 			"}\n";
 	}
 }
-
-$type = $_GET["type"];
-$id = $_GET["id"];
-
-$c3ma = new C3MALight(LightType::RGB);
-var_dump($c3ma->getRGB(1));
-
-for ($i = 0; $i < 6; $i++)
-{
-	$c3ma->setRGB($i, 0, 0, 255);
-}
-
-var_dump($c3ma->getRGB(2));
