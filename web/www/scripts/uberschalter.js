@@ -1,7 +1,18 @@
 function updateSwitch( key, val ) {
   console.log("Key = " + key + ":" + val);
-  $('#'+key).prop('checked', (val > 'h') ? true : false).trigger('create').flipswitch('refresh');
+  $('#'+key).prop('checked', (val == 'h') ? true : false).trigger('create').flipswitch('refresh');
 };
+
+function setBState(key, value) {
+  $.get( "php/api.php",
+	 { 
+	   type : "bin",
+	   id : , 
+	   v: (this.checked) ? 1 : 0
+	}).done( function( data ) {
+           $.each(jQuery.parseJSON(data), updateSwitch);
+	});
+}
 
 function getBStatus(key, callback) {
   $.get( "php/api.php",
@@ -21,20 +32,12 @@ function getAllStates() {
 
 /* main */
 $(function() {
-  $(':checkbox').click(function() {
-        $.get( "php/api.php",
-	      { 
-	          type : "bin" ,
-	          id : this.name, 
-	          v: (this.checked) ? 1 : 0 
-		 
-	      }).done( function( data ) {
-                  $.each(jQuery.parseJSON(data), updateSwitch);
-              });
+  $(':checkbox').change(function() {
+    setBState($(this).name, $(this).checked);
   });
 
   getAllStates();
 
-  //window.setInterval(getAllStates, 2000);
+  window.setInterval(getAllStates, 2000);
 
 });
