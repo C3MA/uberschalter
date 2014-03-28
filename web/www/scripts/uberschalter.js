@@ -8,14 +8,14 @@ function getAllStates() {
 	      }).done( function( data ) {
                   $.each(jQuery.parseJSON(data), function( key, val ) {
 	              console.log("Key = " + key + ":" + val);
-	              $('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').checkboxradio('refresh');
+	              $('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').flipswitch('refresh');
                   });
               });
     } 
 };
 
 /* main */
-$({
+$(function() {
   $(':checkbox').change(function() {
         $.get( "php/api.php",
 	      { 
@@ -26,7 +26,7 @@ $({
 	      }).done( function( data ) {
                   $.each(jQuery.parseJSON(data), function( key, val ) {
                       console.log("Key = " + key + ":" + val);
-                      $('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').checkboxradio('refresh');
+                      $('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').flipswitch('refresh');
                   });
               });
   });
