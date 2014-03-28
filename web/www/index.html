@@ -3,41 +3,39 @@
         <head>
         <title>Lamp Pi</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
-        <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
+        <link rel="stylesheet" href="php/style/jquery.mobile-1.4.0.min.css" />
+        <script type="text/javascript" src="php/style/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="php/style/jquery.mobile-1.4.0.min.js"></script>
 </head>
 <body>
 
 <script type="text/javascript">
 
 $(document).ready(function() {
+  $(':checkbox').change(function() {
+	$.get( "php/api.php", { type : "bin" , id : this.name, v: (this.checked) ? 1 : 0 }).done( function( data ) {
+		$.each(jQuery.parseJSON(data), function( key, val ) {
+		console.log("Key = " + key + ":" + val);
+		$('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').checkboxradio('refresh');
+		});
+	});
+  });
+});   
 
-    $('input:checkbox').change(function(){
-    
-        $.get( "php/api.php", { type : "bin" , id : this.name, v: (this.checked) ? 0 :1 }, function( data ) {
-$.each(data, function( key, val ) {
-$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
-});
-        });
-    });
-    
-});
-   
-
-function getState() {
-for (var i=1;i<6;i++){
-$.get( "php/api.php", { type : "bin" , id : i, function( data ) {
-$.each(data, function( key, val ) {
-$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
-});
-});
+function getAllStates() {
+for (var i=1;i<=6;i++){
+  $.get( "php/api.php", { type : "bin" , id : i }).done( function( data ) {
+     $.each(jQuery.parseJSON(data), function( key, val ) {
+	console.log("Key = " + key + ":" + val);
+	$('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').checkboxradio('refresh');
+     });
+  });
 }
 };
 
-getState();
+getAllStates();
 
-window.setInterval(getState, 2000);
+//window.setInterval(getAllStates, 2000);
 
 </script>
 
