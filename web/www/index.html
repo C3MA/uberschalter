@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+        <head>
+        <title>Lamp Pi</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
+        <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    $('input:checkbox').change(function(){
+    
+        $.get( "php/api.php", { type : "bin" , id : this.name, v: (this.checked) ? 0 :1 }, function( data ) {
+$.each(data, function( key, val ) {
+$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
+});
+        });
+    });
+    
+});
+   
+
+function getState() {
+for (var i=1;i<6;i++){
+$.get( "php/api.php", { type : "bin" , id : i, function( data ) {
+$.each(data, function( key, val ) {
+$('#'+key).prop('checked', val ? true : false).trigger('create').checkboxradio('refresh');
+});
+});
+}
+};
+
+getState();
+
+window.setInterval(getState, 2000);
+
+</script>
+
+<div data-role="page">
+
+        <div data-role="header">
+                <h1>Lamp control (Ueberschalter)</h1>
+        </div><!-- /header -->
+
+        <div data-role="content">
+                <div class="content-primary">
+
+                <form action="#" method="get">
+                        <label for="1"> Lampe #1</label>
+                        <input type="checkbox" data-role="flipswitch" name="1" id="1" checked="checked">
+                        <label for="2"> Lampe #2</label>
+                        <input type="checkbox" data-role="flipswitch" name="2" id="2" checked="checked">
+                        <label for="3"> Lampe #3</label>
+                        <input type="checkbox" data-role="flipswitch" name="3" id="3" checked="checked">
+                        <label for="4"> Lampe #4</label>
+                        <input type="checkbox" data-role="flipswitch" name="4" id="4" checked="checked">
+                        <label for="5"> Lampe #5</label>
+                        <input type="checkbox" data-role="flipswitch" name="5" id="5" checked="checked">
+                        <label for="6"> Lampe #6</label>
+                        <input type="checkbox" data-role="flipswitch" name="6" id="6" checked="checked">
+                </form>
+                </div>
+        </div>
+
+</div><!-- /page -->
+
+</body>
+</html>
