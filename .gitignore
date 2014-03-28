@@ -3,3 +3,5 @@ lighttpd.conf
 *.cgi
 *.swp
 .DS_Store
+*~
+*.tpl.php
