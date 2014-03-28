@@ -1,7 +1,7 @@
 function updateSwitch( key, val ) {
   console.log("Key = " + key + ":" + val);
-  //$('#'+key).prop('checked', (val == "h") ? true : false).trigger('create').flipswitch('refresh');
-});
+  $('#'+key).prop('checked', (val > 0) ? true : false).trigger('create').flipswitch('refresh');
+};
 
 function getBStatus(key, callback) {
   $.get( "php/api.php",
