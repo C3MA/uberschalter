@@ -6,40 +6,9 @@
         <link rel="stylesheet" href="scripts/jquery.mobile-1.4.0.min.css" />
         <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="scripts/jquery.mobile-1.4.0.min.js"></script>
+        <script type="text/javascript" src="scripts/uberschalter.js> </script>
 </head>
 <body> 
-
-<script type="text/javascript">
-
-$(document).ready(function() {
-
-    $('input:checkbox').change(function(){
-    
-        $.post( "cgi-bin/lamp.cgi", { lamp : this.name, value: (this.checked) ? 'h':'l' }, function( data ) {
-                var obj = jQuery.parseJSON( data );
-		getState();
-        });
-    }); 
-    
-});    
-   
-
-function getState() {
-	 $.get("cgi-bin/lamp.cgi", function(data){
-                var obj = jQuery.parseJSON( data );
-                for (var i=1;i<7;i++){
-			$('#'+i).prop('checked',(obj[i] == 'h') ? true : false).trigger('create').checkboxradio('refresh');
-                }
-
-    	});
-    
-};
-
-getState();
-
-window.setInterval(getState, 2000);
-
-</script>
 
 <div data-role="page">
 
