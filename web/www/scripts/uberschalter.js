@@ -7,8 +7,8 @@ function setBState(key, value) {
   $.get( "php/api.php",
 	 { 
 	   type : "bin",
-	   id : , 
-	   v: (this.checked) ? 1 : 0
+	   id : key, 
+	   v: value ? 1 : 0
 	}).done( function( data ) {
            $.each(jQuery.parseJSON(data), updateSwitch);
 	});
@@ -33,7 +33,9 @@ function getAllStates() {
 /* main */
 $(function() {
   $(':checkbox').change(function() {
-    setBState($(this).name, $(this).checked);
+    setBState(
+      $(this).children("input").attr("name"),
+      $(this).children("input").prop("checked");
   });
 
   getAllStates();
