@@ -9,8 +9,8 @@
  ****************************************************************************/
  
 #define UART_UWE 2 /* (PD2) Pin for UART WRITE ENABLE */
-#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH);delay(15); Serial.print(line); delay(15); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
-#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH);delay(15); Serial.println(line); delay(15); /* fzahn crap code */ digitalWrite(UART_UWE, LOW); }
+#define RS485_PRINT(line)   { digitalWrite(UART_UWE, HIGH);delay(10); Serial.print(line); waitForTransmission(); digitalWrite(UART_UWE, LOW); }
+#define RS485_PRINTLN(line) { digitalWrite(UART_UWE, HIGH);delay(10); Serial.println(line); waitForTransmission(); digitalWrite(UART_UWE, LOW); }
 
 /****************************************************************************
  *  Hardware configuration
@@ -25,6 +25,17 @@ int lampState[MAX_LAMPS];
 
 #define DEADTIME 1 // Totzeit, in der die Lampen nicht reagieren (in Sekunden)
 
+
+/****************************************************************************
+ *  Wait all data to be sent
+ ****************************************************************************/
+
+static void waitForTransmission (void) {
+  Serial.flush ();
+  // wait for transmit buffer to empty
+  while ((UCSRA & _BV (TXC)) == 0) {}
+}
+
 // Serial fields
 int CMD_MAX = 128;
 char myCmd[128];
@@ -38,8 +49,6 @@ int lastButtonState2 = LOW;
 
 long lastDebounceTime1 = 0; // the last time the output pin was toggled
 long lastDebounceTime2 = 0;
-
-
 
 void setup() {
   pinMode(button1, INPUT);
@@ -77,10 +86,10 @@ void printLampState() {
 
 void button1pressed()
 {
-    // Only control the lamps for the hardware hacking area: aka lamp 5 & 6
+    // Only control the lamps for the hardware hacking area: aka lamp 9 & 10
     int lampOnFound = 0;
     // search a lamp that is on
-    for(int i=4; i < MAX_LAMPS; i++)
+    for(int i=8; i < MAX_LAMPS; i++)
      if (lampState[i] > 0) {
        lampOnFound = 1;
        break;
@@ -88,7 +97,7 @@ void button1pressed()
   
   // When one lamp is on, set all to OFF
   // When no lamp off, set all to ON
-  for(int i=4; i < MAX_LAMPS; i++) // only handle lamp 5 & 6 in array 4 & 5
+  for(int i=8; i < MAX_LAMPS; i++) // only handle lamp 9 & 10 in array 8 & 9
     lampState[i] = ! lampOnFound;
   
   printLampState();
@@ -100,7 +109,7 @@ void button2pressed()
   // button 2 conroll all lamps of the room
   int lampOnFound = 0;
   // search a lamp that is on
-  for(int i=0; i < 4; i++)
+  for(int i=0; i < 8; i++)
     if (lampState[i] > 0) {
       lampOnFound = 1;
       break;
@@ -108,7 +117,7 @@ void button2pressed()
   
   // When one lamp is on, set all to OFF
   // When no lamp off, set all to ON
-  for(int i=0; i < 4; i++) // only handle lamp 1,2,3,4 in array: 0-3
+  for(int i=0; i < 8; i++) // only handle lamp 1,2,3,4,5,6,7,8 in array: 0-7
     lampState[i] = ! lampOnFound;
   
   printLampState();
