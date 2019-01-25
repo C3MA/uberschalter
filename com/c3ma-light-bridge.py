@@ -25,6 +25,9 @@ for light in conf_lights:
 for group, members in conf_groups.items():
 	states[group] = "unknown"
 
+# Flag fuer Antwort vom Controller
+ser_ack = False
+
 def send_message(topic, payload, keep = False):
 	mqtt_client.publish(topic, payload, 0, keep)
 
@@ -40,14 +43,28 @@ def dispatch_command(obj, value):
 				dispatch_command(light, value)
 			return
  
+def command_write(msg):
+	global ser_ack
+
+	ser_ack = False
+	ser.write(msg)
+
+	# Maximale 2 Sekunden auf Antwort warten
+	for x in range(19):
+		time.sleep(0.1)
+		if ser_ack == True:
+			return True
+
+	# Keine Antwort erhalten
+	return False
 
 def request_status():
 	print "request_status"
-	ser.write('ollpera')
+	command_write('ollpera')
 
 def set_output(name, value):
 	print "set_output %s -> %s" % (name, value)
-	index = str(conf_lights.index(name) + 1)
+	index = str(hex(conf_lights.index(name) + 1).upper())[2:]
 
 	if value == 'on':
 		out = 'h'
@@ -61,9 +78,7 @@ def set_output(name, value):
 	else:
 		return
 
-	ser.write('ollpew' + index + out)
-	time.sleep(0.2)
-	# Delay notwendig, weil uC sonst Befehle verschluckt
+	command_write('ollpew' + index + out)
 
 def state_changed(buf):
 	# Kennzeichnungen am Anfang entfernen
@@ -139,8 +154,12 @@ def uc_rebooted():
 	for light in on_lights:
 		set_output(light, 'on')
 
+def uc_result():
+	global ser_ack
+	ser_ack = True
+
 def handle_serial_message(msg):
-	print "msg " + msg
+	#print "msg " + msg
 
 	if msg.startswith('state'):
 		state_changed(msg)
@@ -150,8 +169,12 @@ def handle_serial_message(msg):
 		button_pressed(msg)
 		return
 		
-	if msg.startswith('Hello world'):
+	if msg.startswith('Ueberschalter 2.0'):
 		uc_rebooted()
+		return
+
+	if msg.startswith('ACK') or msg.startswith('NACK'):
+		uc_result()
 		return
 
 def serial_worker():
@@ -184,8 +207,8 @@ def handle_mqtt_message(client, userdata, msg):
 	obj = msg.topic.split('/')[3]
 	value = msg.payload
 	
-	dispatch_command(obj, value)
-	
+	dispatch_thread = threading.Thread(None, dispatch_command, 'DispatchThread', (obj, value, ))
+	dispatch_thread.start()
 
 def mqtt_worker():
 	global mqtt_client
