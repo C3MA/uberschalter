@@ -206,8 +206,9 @@ void loop() {
        return;
     }
     //check for write command
-    if (myCmd[5] == 'w')
+    if (myCmd[5] == 'w' || myCmd[5] == 's')
     {
+        int silentMode = (myCmd[5] == 's');
         port = decodePort(myCmd[6]);
         if (port < 0)
         {
@@ -220,12 +221,16 @@ void loop() {
               if (myCmd[7] == 'h')
               {
                  lampState[port] = HIGH;
-                 RS485_PRINTLN("HIGH");
+                 if (!silentMode){
+                  RS485_PRINTLN("HIGH");
+                 }
                  //sendAckOverSerial();
               }
               else if (myCmd[7] == 'l'){
                 lampState[port] = LOW;
-                RS485_PRINTLN("LOW");
+                if (!silentMode){
+                  RS485_PRINTLN("LOW");
+                }
                 //sendAckOverSerial();
               }
               else
@@ -233,9 +238,11 @@ void loop() {
                 sendNackOverSerial();
                 return;  
               }
-            
-              printLampState();
-              sendAckOverSerial();
+
+              if (!silentMode){
+                printLampState();
+                sendAckOverSerial();
+              }
               
            }
         }
@@ -340,8 +347,10 @@ void sendHelpOverSerial()
   RS485_PRINTLN("----help is coming----");
   RS485_PRINTLN("all commands must be prefixed with \"ollpe\"");
   RS485_PRINTLN("----commands----");
-  RS485_PRINTLN("w1h\t set port 1 high");
-  RS485_PRINTLN("w1l\t set port 1 low");
+  RS485_PRINTLN("w1h\t set port 0x1 high");
+  RS485_PRINTLN("w1l\t set port 0x1 low");
+  RS485_PRINTLN("s1h\t set port 0x1 silently (no answer) high");
+  RS485_PRINTLN("s1l\t set port 0x1 silently (no answer) low");
   RS485_PRINTLN("r1\t returns binary state of port 1 (values 0,1)");
   RS485_PRINTLN("ra\t returns binary state of all ports (values 0,1)");
   RS485_PRINTLN("ping\t returns \"PACK\"");
@@ -371,6 +380,10 @@ int decodePort(char c)
      return 6;
    case '8':
      return 7;
+   case '9':
+     return 8;
+   case 'A':
+     return 9;
    default:
      return -1;
   }
