@@ -43,7 +43,7 @@ function save_messages($topic, $msg) {
 }
 
 
-$elements = array("1", "2", "3", "4", "5", "6", "main", "workshop");
+$elements = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "main", "workshop");
 
 
 $command = check_parameter("command", array("query", "update"));

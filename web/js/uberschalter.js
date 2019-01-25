@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	for(lamp = 1; lamp <= 6; lamp++) {
+	for(lamp = 1; lamp <= 10; lamp++) {
 		// Schalter initalisieren
 		$("[name='lamp-" + lamp + "']").bootstrapSwitch();
 		
