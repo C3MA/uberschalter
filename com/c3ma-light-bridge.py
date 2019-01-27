@@ -27,6 +27,8 @@ for group, members in conf_groups.items():
 
 # Flag fuer Antwort vom Controller
 ser_ack = False
+# Lock fuer eingehenede Befehle
+dispatch_lock = threading.Lock()
 
 def send_message(topic, payload, keep = False):
 	mqtt_client.publish(topic, payload, 0, keep)
@@ -34,7 +36,9 @@ def send_message(topic, payload, keep = False):
 def dispatch_command(obj, value):
 	for light in conf_lights:
 		if light == obj:
+			dispatch_lock.acquire()
 			set_output(light, value)
+			dispatch_lock.release()
 			return
 
 	for group, lights in conf_groups.items():
